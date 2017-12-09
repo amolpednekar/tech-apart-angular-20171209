@@ -49,7 +49,7 @@ export class TripsListComponent implements OnInit {
       price: new FormControl(),
       duration: new FormControl(),
       description: new FormControl(),
-      imageUrl: new FormControl()
+      imageUrl: new FormControl("https://angular.io/assets/images/logos/angular/angular.png")
     });
   }
 
@@ -61,7 +61,7 @@ export class TripsListComponent implements OnInit {
     const newTrip = {
       name: this.tripForm.controls.name.value,
       price: this.tripForm.controls.price.value,
-      duration: this.tripForm.controls.duration.value,
+      duration: this.tripForm.controls.duration.value, 
       description: this.tripForm.controls.description.value,
       image_url: this.tripForm.controls.imageUrl.value
     };
