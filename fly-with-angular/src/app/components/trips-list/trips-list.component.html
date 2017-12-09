@@ -6,6 +6,21 @@
 
   <div *ngIf="!addTripFormMode">
     <div class="trips-list">
+
+      <div class="money-form-container">
+        <div class="form-container">
+          <form class="form-inline" name="money-form"  [formGroup]="moneyForm">
+            <label for="inputTotalMoney">Total money: </label>
+            <input type="number" class="form-controlm-2" id="inputTotalMoney" placeholder="Enter name" 
+            formControlName="money" (keyup)="addMoney()">
+          </form>
+        </div>
+        <div class="remaining-amount-container">
+          Remaining money to book trip:
+          <strong>{{ pendingAmount }}</strong>
+        </div>
+      </div>
+
       <div *ngIf="trips.length > 0">
         <div class="trip" *ngFor="let trip of trips">
           <div class="row">
@@ -18,18 +33,22 @@
                 <div class="trip-price">{{ trip.price | currency:"INR" }}</div>
               </div>
               <div class="trip-duration">{{ trip.duration }}</div>
-    
+
               <div class="row trip-description-container">
                 <div class="col-md-8 trip-description">{{ trip.description }}</div>
                 <div class="col-md-4">
-                  <button class="btn btn-lg book-btn">Book Trip</button>
+                  <button class="btn btn-lg book-btn">
+                    <span *ngIf="!trip.booked" (click)="toggleBookingStatus(trip)">Book Trip</span>
+                    <span *ngIf="trip.booked">Booked</span>
+                    <!-- <span *ngIf="!tripForm.booked">Booked</span> -->
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-  
+
       <div *ngIf="trips.length <= 0">
         No Trips to show
       </div>
@@ -75,7 +94,8 @@
         <div class="form-group col-md-12">
           <label class="col-form-label" for="formGroupDescription">Description</label>
           <textarea type="text" class="form-control" id="formGroupDescription" placeholder="Some description goes here..." formControlName="description"></textarea>
-          <div *ngIf="tripForm.get('description').invalid && (tripForm.get('description').dirty || tripForm.get('description').touched)" class="alert alert-danger">
+          <div *ngIf="tripForm.get('description').invalid && (tripForm.get('description').dirty || tripForm.get('description').touched)"
+            class="alert alert-danger">
             <div *ngIf="tripForm.get('description').errors['required']">
               Description is required.
             </div>

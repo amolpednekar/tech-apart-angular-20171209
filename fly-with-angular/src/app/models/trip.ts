@@ -4,4 +4,5 @@ export interface Trip {
   duration: string;
   description: string;
   image_url: string;
+  booked: boolean;
 }
