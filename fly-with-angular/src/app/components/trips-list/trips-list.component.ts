@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Trip } from '../../models/trip';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-trips-list',
@@ -11,7 +11,9 @@ export class TripsListComponent implements OnInit {
 
   title = 'Flights of a Lifetime';
   addTripFormMode = false;
+  pendingAmount: number;
   tripForm: FormGroup;
+  moneyForm: FormGroup;
 
   trips: Array<Trip> = [
     {
@@ -19,21 +21,24 @@ export class TripsListComponent implements OnInit {
       price: 18200,
       duration: '2 Earth Years',
       description: 'Race through the Solar System to reach the Red planet. This flight will take 11 Earth Years for each side of the journey.',
-      image_url: 'https://angular.io/assets/images/logos/angular/angular.png'
+      image_url: 'https://angular.io/assets/images/logos/angular/angular.png',
+      booked: false
     },
     {
       name: 'Super Flights to Mars',
       price: 18200,
       duration: '2 Earth Years',
       description: 'Race through the Solar System to reach the Red planet. This flight will take 11 Earth Years for each side of the journey.',
-      image_url: 'https://angular.io/assets/images/logos/angular/angular.png'
+      image_url: 'https://angular.io/assets/images/logos/angular/angular.png',
+      booked: false
     },
     {
       name: 'Super Flights to Mars',
       price: 18200,
       duration: '2 Earth Years',
       description: 'Race through the Solar System to reach the Red planet. This flight will take 11 Earth Years for each side of the journey.',
-      image_url: 'https://angular.io/assets/images/logos/angular/angular.png'
+      image_url: 'https://angular.io/assets/images/logos/angular/angular.png',
+      booked: false
     }
   ];
 
@@ -45,16 +50,28 @@ export class TripsListComponent implements OnInit {
 
   createForm() {
     this.tripForm = this.fb.group({
-      name: new FormControl(),
-      price: new FormControl(),
-      duration: new FormControl(),
-      description: new FormControl(),
-      imageUrl: new FormControl("https://angular.io/assets/images/logos/angular/angular.png")
+      name: new FormControl('', Validators.required),
+      price: new FormControl(0, Validators.required),
+      duration: new FormControl('', Validators.required),
+      description: new FormControl('', Validators.required),
+      imageUrl: new FormControl('', Validators.required),
+      booked: new FormControl()
+    });
+
+    this.moneyForm = this.fb.group({
+      money: new FormControl()
     });
   }
 
   toggleDisplayMode() {
     this.addTripFormMode = !this.addTripFormMode;
+  }
+
+  toggleBookingStatus(trip: Trip) {
+    if (this.pendingAmount - trip.price > 0) {
+      this.pendingAmount -= trip.price;
+      trip.booked = !trip.booked;
+    }
   }
 
   formSubmitted() {
@@ -63,11 +80,18 @@ export class TripsListComponent implements OnInit {
       price: this.tripForm.controls.price.value,
       duration: this.tripForm.controls.duration.value, 
       description: this.tripForm.controls.description.value,
-      image_url: this.tripForm.controls.imageUrl.value
+      image_url: this.tripForm.controls.imageUrl.value,
+      booked: false
     };
 
     this.trips.push(newTrip);
     this.toggleDisplayMode();
+  }
+
+  addMoney() {
+    console.log(this.moneyForm.controls.money.value);
+    const temp = this.moneyForm.controls.money.value;
+    this.pendingAmount = temp;
   }
 
 }
